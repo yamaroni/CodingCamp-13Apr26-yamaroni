@@ -410,99 +410,17 @@ function safeUpdateElement(elementId, content) {
 }
 ```
 
-## Correctness Properties
+## Testing Strategy
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+The application should be validated through manual testing and user acceptance testing to ensure all requirements are met. Key areas to verify:
 
-### Property 1: Input Validation Correctness
-
-*For any* combination of item name, amount, and category inputs, the validation function SHALL correctly identify whether all required fields are present and valid (non-empty name after trimming, positive numeric amount, valid category).
-
-**Validates: Requirements 1.3**
-
-### Property 2: Transaction Creation Preserves Input Data
-
-*For any* valid item name, amount, and category, creating a transaction SHALL produce a transaction object containing exactly those values along with a unique ID and timestamp.
-
-**Validates: Requirements 1.5**
-
-### Property 3: Transaction List Reflects Current State
-
-*For any* array of transactions in application state, the rendered transaction list SHALL contain exactly those transactions, displaying the item name, amount, and category for each.
-
-**Validates: Requirements 1.6, 2.1, 2.3, 2.4**
-
-### Property 4: Form Clearing After Submission
-
-*For any* valid transaction input, after successful form submission, all input fields SHALL be empty.
-
-**Validates: Requirements 1.7**
-
-### Property 5: Delete Control Presence
-
-*For any* transaction in the rendered list, a delete control SHALL be present and associated with that specific transaction.
-
-**Validates: Requirements 3.1**
-
-### Property 6: Delete Operation Correctness
-
-*For any* transaction list and any transaction ID in that list, deleting that transaction SHALL result in a new list containing all transactions except the one with the specified ID.
-
-**Validates: Requirements 2.5, 3.2**
-
-### Property 7: Balance Calculation Invariant
-
-*For any* array of transactions, the displayed balance SHALL equal the sum of all transaction amounts.
-
-**Validates: Requirements 4.1, 4.2, 4.3, 3.3**
-
-### Property 8: Category Totals Calculation
-
-*For any* array of transactions, the calculated category totals SHALL equal the sum of transaction amounts grouped by category, with each category (Food, Transport, Fun) having a total greater than or equal to zero.
-
-**Validates: Requirements 5.2**
-
-### Property 9: Chart Data Consistency
-
-*For any* array of transactions, the chart data SHALL match the calculated category totals, with chart values corresponding to the sum of amounts for each category.
-
-**Validates: Requirements 5.1, 5.3, 5.4, 3.4**
-
-### Property 10: Storage Persistence Round-Trip
-
-*For any* array of valid transactions, saving to Local Storage and then loading from Local Storage SHALL produce an equivalent array of transactions with all fields preserved.
-
-**Validates: Requirements 6.1, 6.3**
-
-### Property 11: Storage Synchronization After Add
-
-*For any* initial transaction array in storage, adding a new transaction SHALL result in storage containing the original transactions plus the new transaction.
-
-**Validates: Requirements 6.1**
-
-### Property 12: Storage Synchronization After Delete
-
-*For any* transaction array in storage and any transaction ID in that array, deleting that transaction SHALL result in storage containing all transactions except the deleted one.
-
-**Validates: Requirements 6.2**
-
-### Property 13: Application State Restoration
-
-*For any* array of transactions saved to Local Storage, loading the application SHALL restore the complete state: transaction list populated with all saved transactions, balance equal to sum of amounts, and chart data matching category totals.
-
-**Validates: Requirements 6.4, 6.5, 6.6**
-
-### Property 14: Add-Delete Idempotence
-
-*For any* initial transaction array, adding a transaction and then immediately deleting it SHALL return the application to a state equivalent to the initial state (same transactions, same balance, same chart data).
-
-**Validates: Requirements 1.5, 3.2, 4.2, 4.3**
-
-### Property 15: Transaction Rendering Completeness
-
-*For any* transaction with item name, amount, and category, the rendered HTML element for that transaction SHALL contain text or attributes representing all three fields.
-
-**Validates: Requirements 2.3**
+1. **Input Validation**: Test form submission with valid and invalid inputs
+2. **Data Persistence**: Verify transactions persist across browser sessions
+3. **UI Updates**: Confirm all components update correctly when transactions are added or deleted
+4. **Balance Calculation**: Verify balance displays correctly for various transaction combinations
+5. **Chart Visualization**: Confirm chart accurately reflects spending by category
+6. **Browser Compatibility**: Test in Chrome, Firefox, Edge, and Safari
+7. **Error Handling**: Verify graceful handling of storage errors and edge cases
 
 ## Implementation Notes
 

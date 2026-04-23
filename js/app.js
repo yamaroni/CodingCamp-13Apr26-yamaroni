@@ -193,3 +193,81 @@ function validateInput(itemName, amount, category) {
   
   return errors;
 }
+
+// ============================================
+// UI RENDERING FUNCTIONS
+// ============================================
+
+/**
+ * Update the balance display with formatted currency
+ * @param {number} balance - Total balance to display
+ */
+function updateBalanceDisplay(balance) {
+  // Get the balance display element
+  const balanceElement = document.getElementById('balance-display');
+  
+  // Check if element exists
+  if (!balanceElement) {
+    console.warn('Balance display element not found');
+    return;
+  }
+  
+  // Format balance as currency with 2 decimal places
+  const formattedBalance = '$' + balance.toFixed(2);
+  
+  // Update the element's text content
+  balanceElement.textContent = formattedBalance;
+}
+
+/**
+ * Render the transaction list in the DOM
+ * @param {Array} transactions - Array of transaction objects to display
+ */
+function renderTransactionList(transactions) {
+  // Get the transaction list container element
+  const listElement = document.getElementById('transaction-list');
+  
+  // Check if element exists
+  if (!listElement) {
+    console.warn('Transaction list element not found');
+    return;
+  }
+  
+  // Handle empty state - no transactions exist
+  if (!transactions || !Array.isArray(transactions) || transactions.length === 0) {
+    listElement.innerHTML = '<p class="empty-state">No transactions yet. Add your first expense above!</p>';
+    return;
+  }
+  
+  // Generate HTML for all transactions
+  const transactionHTML = transactions.map(transaction => {
+    // Format amount as currency with 2 decimal places
+    const formattedAmount = '$' + transaction.amount.toFixed(2);
+    
+    // Create HTML for a single transaction item
+    return `
+      <div class="transaction-item">
+        <div class="transaction-details">
+          <span class="transaction-name">${escapeHtml(transaction.itemName)}</span>
+          <span class="transaction-amount">${formattedAmount}</span>
+          <span class="transaction-category">${escapeHtml(transaction.category)}</span>
+        </div>
+        <button class="delete-btn" data-transaction-id="${transaction.id}" aria-label="Delete ${escapeHtml(transaction.itemName)}">Delete</button>
+      </div>
+    `;
+  }).join('');
+  
+  // Update the DOM with generated HTML
+  listElement.innerHTML = transactionHTML;
+}
+
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text safe for HTML insertion
+ */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
